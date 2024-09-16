@@ -57,6 +57,7 @@ import {
   DEFAULT_EIP7715_METHODS,
   WalletGrantPermissionsParameters,
   WalletGrantPermissionsReturnType,
+  DEFAULT_TON_METHODS,
 } from "../constants";
 import { useChainData } from "./ChainDataContext";
 import { rpcProvidersByChainId } from "../../src/helpers/api";
@@ -126,6 +127,11 @@ interface IContext {
   tronRpc: {
     testSignMessage: TRpcRequestCallback;
     testSignTransaction: TRpcRequestCallback;
+  };
+  tonRpc: {
+    testSignMessage: TRpcRequestCallback;
+    testSignTransaction: TRpcRequestCallback;
+    testSendTransaction: TRpcRequestCallback;
   };
   tezosRpc: {
     testGetAccounts: TRpcRequestCallback;
@@ -1403,6 +1409,89 @@ export function JsonRpcContextProvider({
     ),
   };
 
+  // Ton rpc
+  const tonRpc = {
+    testSignTransaction: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        const { result } = await client!.request<{ result: any }>({
+          chainId,
+          topic: session!.topic,
+          request: {
+            method: DEFAULT_TON_METHODS.TON_SIGN_TRANSACTION,
+            params: {
+              address,
+              transaction: {
+              },
+            },
+          },
+        });
+
+        return {
+          method: DEFAULT_TON_METHODS.TON_SIGN_TRANSACTION,
+          address,
+          valid: true,
+          result: result.signature,
+        };
+      }
+    ),
+    testSendTransaction: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        const { result } = await client!.request<{ result: any }>({
+          chainId,
+          topic: session!.topic,
+          request: {
+            method: DEFAULT_TON_METHODS.TON_SEND_TRANSACTION,
+            params: {
+              address,
+              transaction: {
+              },
+            },
+          },
+        });
+
+        return {
+          method: DEFAULT_TON_METHODS.TON_SEND_TRANSACTION,
+          address,
+          valid: true,
+          result: result.signature,
+        };
+      }
+    ),
+    testSignMessage: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        const message = "This is a message to be signed for Tron";
+
+        const result = await client!.request<{ signature: string }>({
+          chainId,
+          topic: session!.topic,
+          request: {
+            method: DEFAULT_TON_METHODS.TON_SIGN_MESSAGE,
+            params: {
+              address,
+              message,
+            },
+          },
+        });
+
+        return {
+          method: DEFAULT_TON_METHODS.TON_SIGN_MESSAGE,
+          address,
+          valid: true,
+          result: result.signature,
+        };
+      }
+    ),
+  };
+
   // -------- TEZOS RPC METHODS --------
 
   const tezosRpc = {
@@ -1656,6 +1745,7 @@ export function JsonRpcContextProvider({
         rpcResult: result,
         isRpcRequestPending: pending,
         isTestnet,
+        tonRpc,
         setIsTestnet,
       }}
     >

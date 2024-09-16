@@ -97,6 +97,7 @@ const Home: NextPage = () => {
     isRpcRequestPending,
     rpcResult,
     isTestnet,
+    tonRpc,
     setIsTestnet,
   } = useJsonRpc();
 
@@ -417,6 +418,36 @@ const Home: NextPage = () => {
     ];
   };
 
+  const getTonActions = (): AccountAction[] => {
+    const onSignTransaction = async (chainId: string, address: string) => {
+      openRequestModal();
+      await tonRpc.testSignTransaction(chainId, address);
+    };
+    const onSignMessage = async (chainId: string, address: string) => {
+      openRequestModal();
+      await tonRpc.testSignMessage(chainId, address);
+    };
+    const onSendTransaction = async (chainId: string, address: string) => {
+      openRequestModal();
+      await tonRpc.testSendTransaction(chainId, address);
+    };
+    return [
+      {
+        method: DEFAULT_TON_METHODS.TON_SIGN_TRANSACTION,
+        callback: onSignTransaction,
+      },
+      {
+        method: DEFAULT_TON_METHODS.TON_SIGN_MESSAGE,
+        callback: onSignMessage,
+      },
+      {
+        method: DEFAULT_TON_METHODS.TON_SEND_TRANSACTION,
+        callback: onSendTransaction,
+      },
+    ];
+  };
+
+
   const getTezosActions = (): AccountAction[] => {
     const onGetAccounts = async (chainId: string, address: string) => {
       openRequestModal();
@@ -480,26 +511,29 @@ const Home: NextPage = () => {
   const getBlockchainActions = (account: string) => {
     const [namespace, chainId, address] = account.split(":");
     switch (namespace) {
-      case "eip155":
-        return getEthereumActions(chainId, address);
-      case "cosmos":
-        return getCosmosActions();
-      case "solana":
-        return getSolanaActions();
-      case "polkadot":
-        return getPolkadotActions();
-      case "near":
-        return getNearActions();
-      case "mvx":
-        return getMultiversxActions();
-      case "tron":
-        return getTronActions();
-      case "tezos":
-        return getTezosActions();
-      case "kadena":
-        return getKadenaActions();
+      // case "eip155":
+      //   return getEthereumActions(chainId, address);
+      // case "cosmos":
+      //   return getCosmosActions();
+      // case "solana":
+      //   return getSolanaActions();
+      // case "polkadot":
+      //   return getPolkadotActions();
+      // case "near":
+      //   return getNearActions();
+      // case "mvx":
+      //   return getMultiversxActions();
+      // case "tron":
+      //   return getTronActions();
+      // case "tezos":
+      //   return getTezosActions();
+      // case "kadena":
+      //   return getKadenaActions();
+      // case "ton":
+      //   return getTonActions();
       default:
-        break;
+        return getTonActions();
+        // break;
     }
   };
 
