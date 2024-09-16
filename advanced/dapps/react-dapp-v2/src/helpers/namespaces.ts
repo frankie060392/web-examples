@@ -19,6 +19,8 @@ import {
   DEFAULT_TEZOS_METHODS,
   DEFAULT_TEZOS_EVENTS,
   DEFAULT_OPTIONAL_METHODS,
+  DEFAULT_TON_METHODS,
+  DEFAULT_TON_EVENTS,
 } from "../constants";
 
 export const getNamespacesFromChains = (chains: string[]) => {
@@ -53,6 +55,8 @@ export const getSupportedRequiredMethodsByNamespace = (namespace: string) => {
       return Object.values(DEFAULT_TEZOS_METHODS);
     case "kadena":
       return Object.values(DEFAULT_KADENA_METHODS);
+    case "ton":
+      return Object.values(DEFAULT_TON_METHODS)
     default:
       throw new Error(
         `No default required methods for namespace: ${namespace}`
@@ -72,6 +76,7 @@ export const getSupportedOptionalMethodsByNamespace = (namespace: string) => {
     case "tron":
     case "tezos":
     case "kadena":
+    case "ton":
       return [];
     default:
       throw new Error(
@@ -96,6 +101,8 @@ export const getSupportedEventsByNamespace = (namespace: string) => {
       return Object.values(DEFAULT_MULTIVERSX_EVENTS);
     case "tron":
       return Object.values(DEFAULT_TRON_EVENTS);
+    case "ton":
+      return Object.values(DEFAULT_TON_EVENTS);
     case "tezos":
       return Object.values(DEFAULT_TEZOS_EVENTS);
     case "kadena":

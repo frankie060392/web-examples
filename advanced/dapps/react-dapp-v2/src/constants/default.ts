@@ -19,6 +19,7 @@ export const DEFAULT_MAIN_CHAINS = [
   "tron:0x2b6653dc",
   "tezos:mainnet",
   "kadena:mainnet01",
+  "ton:0x3b6653db",
 ];
 
 export const DEFAULT_TEST_CHAINS = [
@@ -239,7 +240,18 @@ export enum DEFAULT_TRON_METHODS {
   TRON_SIGN_MESSAGE = "tron_signMessage",
 }
 
+/**
+ * TON
+ */
+export enum DEFAULT_TON_METHODS {
+  TON_SIGN_TRANSACTION = "ton_signTransaction",
+  TON_SIGN_MESSAGE = "ton_signMessage",
+  TON_SEND_TRANSACTION = "ton_sendTransaction",
+}
+
 export enum DEFAULT_TRON_EVENTS {}
+
+export enum DEFAULT_TON_EVENTS {}
 
 /**
  * TEZOS

@@ -16,6 +16,7 @@ import { CosmosChainData } from "../chains/cosmos";
 import { EIP155ChainData } from "../chains/eip155";
 import { TezosChainData } from "../chains/tezos";
 import { KadenaChainData } from "../chains/kadena";
+import { TonChainData } from "../chains/ton";
 
 /**
  * Types
@@ -60,6 +61,9 @@ export function ChainDataContextProvider({
             break;
           case "tron":
             chains = TronChainData;
+            break;
+          case "ton":
+            chains = TonChainData;
             break;
           case "cosmos":
             chains = CosmosChainData;
