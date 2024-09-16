@@ -511,29 +511,28 @@ const Home: NextPage = () => {
   const getBlockchainActions = (account: string) => {
     const [namespace, chainId, address] = account.split(":");
     switch (namespace) {
-      // case "eip155":
-      //   return getEthereumActions(chainId, address);
-      // case "cosmos":
-      //   return getCosmosActions();
-      // case "solana":
-      //   return getSolanaActions();
-      // case "polkadot":
-      //   return getPolkadotActions();
-      // case "near":
-      //   return getNearActions();
-      // case "mvx":
-      //   return getMultiversxActions();
-      // case "tron":
-      //   return getTronActions();
-      // case "tezos":
-      //   return getTezosActions();
-      // case "kadena":
-      //   return getKadenaActions();
-      // case "ton":
-      //   return getTonActions();
-      default:
+      case "eip155":
+        return getEthereumActions(chainId, address);
+      case "cosmos":
+        return getCosmosActions();
+      case "solana":
+        return getSolanaActions();
+      case "polkadot":
+        return getPolkadotActions();
+      case "near":
+        return getNearActions();
+      case "mvx":
+        return getMultiversxActions();
+      case "tron":
+        return getTronActions();
+      case "tezos":
+        return getTezosActions();
+      case "kadena":
+        return getKadenaActions();
+      case "ton":
         return getTonActions();
-        // break;
+      default:
+        break;
     }
   };
 

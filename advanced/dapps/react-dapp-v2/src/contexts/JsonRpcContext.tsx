@@ -183,6 +183,9 @@ export function JsonRpcContextProvider({
       ) => Promise<IFormattedRpcResponse>
     ) =>
     async (chainId: string, address: string) => {
+      console.log("🚀 ~ address:", address)
+      console.log("🚀 ~ chainId:", chainId)
+      
       if (typeof client === "undefined") {
         throw new Error("WalletConnect is not initialized");
       }
@@ -253,6 +256,9 @@ export function JsonRpcContextProvider({
   const ethereumRpc = {
     testSendTransaction: _createJsonRpcRequestHandler(
       async (chainId: string, address: string) => {
+        console.log("🚀 ~ address:", address)
+        console.log("🚀 ~ chainId:", chainId)
+        
         const caipAccountAddress = `${chainId}:${address}`;
         const account = accounts.find(
           (account) => account === caipAccountAddress
