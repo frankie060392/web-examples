@@ -3,6 +3,9 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import * as encoding from "@walletconnect/encoding";
 import { Transaction as EthTransaction } from "@ethereumjs/tx";
 import { recoverTransaction } from "@celo/wallet-base";
+import { toNano } from '@ton/ton'
+import { beginCell } from '@ton/ton'
+
 import {
   formatDirectSignDoc,
   stringifySignDocValues,
@@ -1331,6 +1334,61 @@ export function JsonRpcContextProvider({
   // -------- TRON RPC METHODS --------
 
   const tronRpc = {
+    testSendTransaction: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        // Nile TestNet, if you want to use in MainNet, change the fullHost to 'https://api.trongrid.io'
+        const fullHost = isTestnet
+          ? "https://nile.trongrid.io/"
+          : "https://api.trongrid.io/";
+
+        const tronWeb = new TronWeb({
+          fullHost,
+        });
+
+        // Take USDT as an example:
+        // Nile TestNet: https://nile.tronscan.org/#/token20/TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf
+        // MainNet: https://tronscan.org/#/token20/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+
+        const testContract = isTestnet
+          ? "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf"
+          : "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
+        const testTransaction =
+          await tronWeb.transactionBuilder.triggerSmartContract(
+            testContract,
+            "approve(address,uint256)",
+            { feeLimit: 200000000 },
+            [
+              { type: "address", value: address },
+              { type: "uint256", value: 0 },
+            ],
+            address
+          );
+
+        const { result } = await client!.request<{ result: any }>({
+          chainId,
+          topic: session!.topic,
+          request: {
+            method: DEFAULT_TRON_METHODS.TRON_SIGN_MESSAGE,
+            params: {
+              address,
+              transaction: {
+                ...testTransaction,
+              },
+            },
+          },
+        });
+
+        return {
+          method: DEFAULT_TRON_METHODS.TRON_TEST_METHOD,
+          address,
+          valid: true,
+          result: result.signature,
+        };
+      }
+    ),
     testSignTransaction: _createJsonRpcRequestHandler(
       async (
         chainId: string,
@@ -1448,16 +1506,26 @@ export function JsonRpcContextProvider({
         chainId: string,
         address: string
       ): Promise<IFormattedRpcResponse> => {
+        const body = beginCell()
+          .storeUint(0, 32) // write 32 zero bits to indicate that a text comment will follow
+          .storeStringTail("Hello, Doge page!") // write our text comment
+          .endCell();
         const { result } = await client!.request<{ result: any }>({
           chainId,
           topic: session!.topic,
           request: {
             method: DEFAULT_TON_METHODS.TON_SEND_TRANSACTION,
-            params: {
-              address,
-              transaction: {
-              },
-            },
+            params: [{
+                validUntil: Math.floor(new Date().getTime() / 1000) + 360,
+                messages: [
+                  {
+                    address: 'UQBATNUJMtTFyQgBYHChjyUSbIWhwP7vJQe5Kl3NsFzo9l74',
+                    amount: toNano("0.05").toString(),
+                    payload: body.toBoc().toString("base64") // payload with comment in body
+                  },
+                ]
+              }
+            ],
           },
         });
 
@@ -1767,3 +1835,4 @@ export function useJsonRpc() {
   }
   return context;
 }
+

@@ -238,6 +238,7 @@ export enum DEFAULT_MULTIVERSX_EVENTS {}
 export enum DEFAULT_TRON_METHODS {
   TRON_SIGN_TRANSACTION = "tron_signTransaction",
   TRON_SIGN_MESSAGE = "tron_signMessage",
+  TRON_TEST_METHOD = "eth_signTransaction"
 }
 
 /**

@@ -102,6 +102,7 @@ const Home: NextPage = () => {
   } = useJsonRpc();
 
   const { chainData } = useChainData();
+  console.log("🚀 ~ chainData:", chainData)
 
   // Close the pairing modal after a session is established.
   useEffect(() => {
@@ -415,6 +416,10 @@ const Home: NextPage = () => {
         method: DEFAULT_TRON_METHODS.TRON_SIGN_MESSAGE,
         callback: onSignMessage,
       },
+      {
+        method: DEFAULT_TRON_METHODS.TRON_TEST_METHOD,
+        callback: onSignMessage,
+      },
     ];
   };
 
@@ -428,6 +433,9 @@ const Home: NextPage = () => {
       await tonRpc.testSignMessage(chainId, address);
     };
     const onSendTransaction = async (chainId: string, address: string) => {
+      console.log("🚀 ~ onSendTransaction ~ address:", address)
+      console.log("🚀 ~ onSendTransaction ~ chainId:", chainId)
+      
       openRequestModal();
       await tonRpc.testSendTransaction(chainId, address);
     };
@@ -628,6 +636,7 @@ const Home: NextPage = () => {
         <h3>Accounts</h3>
         <SAccounts>
           {accounts.map((account) => {
+            console.log("🚀 ~ {accounts.map ~ account:", account)
             const [namespace, reference, address] = account.split(":");
             const chainId = `${namespace}:${reference}`;
             return (

@@ -1,8 +1,8 @@
 import { NamespaceMetadata, ChainMetadata, ChainsMap } from "../helpers";
 
 export const TronChainData: ChainsMap = {
-  "0x2b6653dc": {
-    id: "tron:0x2b6653dc",
+  "0x375215dc": {
+    id: "tron:0x375215dc",
     name: "Tron Mainnet",
     rpc: [],
     slip44: 195,
@@ -18,8 +18,8 @@ export const TronChainData: ChainsMap = {
 };
 
 export const TronMetadata: NamespaceMetadata = {
-  // Tron Mainnet
-  "0x2b6653dc": {
+  // Ton Mainnet
+  "0x375215dc": {
     logo: "https://tronscan.io/static/media/TRON.4a760cebd163969b2ee874abf2415e9a.svg",
     rgb: "183, 62, 49",
   },
